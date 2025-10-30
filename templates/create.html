@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}写留言 - 我的博客{% endblock %}
+
+{% block content %}
+<div class="create-container">
+    <div class="create-header">
+        <h1>写新留言</h1>
+        <p>分享你的想法和见解</p>
+    </div>
+    
+    <div class="card">
+        <form method="POST" class="post-form">
+            <div class="form-group">
+                <label for="title" class="form-label">标题</label>
+                <input type="text" id="title" name="title" class="form-control" 
+                       placeholder="请输入留言标题" required maxlength="200">
+            </div>
+            
+            <div class="form-group">
+                <label for="content" class="form-label">内容</label>
+                <div class="editor-toolbar">
+                    <button type="button" onclick="formatText('bold')" title="加粗"><strong>B</strong></button>
+                    <button type="button" onclick="formatText('italic')" title="斜体"><em>I</em></button>
+                    <button type="button" onclick="formatText('underline')" title="下划线"><u>U</u></button>
+                    <button type="button" onclick="insertText('\n- ')" title="列表">•</button>
+                    <button type="button" onclick="insertText('# ')" title="一级标题">H1</button>
+                    <button type="button" onclick="insertText('## ')" title="二级标题">H2</button>
+                </div>
+                <textarea id="content" name="content" class="form-control editor-content" 
+                          placeholder="请输入留言内容..." required rows="15"></textarea>
+            </div>
+            
+            <div class="form-actions">
+                <a href="{{ url_for('index') }}" class="btn btn-outline">取消</a>
+                <button type="submit" class="btn btn-primary">发布留言</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.create-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.create-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: white;
+}
+
+.create-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.create-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.post-form {
+    margin: 0;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.editor-toolbar {
+    background: #f8f9fa;
+    padding: 0.75rem;
+    border: 2px solid #e1e5e9;
+    border-bottom: none;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.editor-toolbar button {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+    min-width: 40px;
+}
+
+.editor-toolbar button:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.editor-content {
+    border: 2px solid #e1e5e9;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    min-height: 300px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+</style>
+
+<script>
+function formatText(command) {
+    const textarea = document.getElementById('content');
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+    
+    let formattedText = '';
+    let newCursorPos = start;
+    
+    switch (command) {
+        case 'bold':
+            formattedText = `**${selectedText}**`;
+            newCursorPos = start + 2 + selectedText.length;
+            break;
+        case 'italic':
+            formattedText = `*${selectedText}*`;
+            newCursorPos = start + 1 + selectedText.length;
+            break;
+        case 'underline':
+            formattedText = `__${selectedText}__`;
+            newCursorPos = start + 2 + selectedText.length;
+            break;
+    }
+    
+    textarea.value = textarea.value.substring(0, start) + formattedText + textarea.value.substring(end);
+    textarea.focus();
+    textarea.setSelectionRange(newCursorPos, newCursorPos);
+}
+
+function insertText(text) {
+    const textarea = document.getElementById('content');
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    
+    textarea.value = textarea.value.substring(0, start) + text + textarea.value.substring(end);
+    textarea.focus();
+    textarea.setSelectionRange(start + text.length, start + text.length);
+}
+</script>
+{% endblock %}

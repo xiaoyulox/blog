@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}孙浩然的博客{% endblock %}</title>
+    <!-- 其他 meta 标签 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mouse-effects.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- 背景图片 -->
+    <div class="background-image"></div>
+    
+    <!-- 效果容器 -->
+    <div id="rain-container" class="rain-container"></div>
+    <div id="mouse-trail" class="mouse-trail-container"></div>
+    <div id="click-effects" class="click-effects-container"></div>
+    
+    <!-- 其他内容 -->
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                ✨ 孙浩然的博客
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link">
+                    <span>🏠</span> 首页
+                </a>
+                {% if session.user_id %}
+                    <a href="{{ url_for('create') }}" class="nav-link">
+                        <span>📝</span> 写留言
+                    </a>
+                    <div class="user-info">
+                        {% if session.avatar %}
+                            <img src="{{ url_for('static', filename='uploads/' + session.avatar) }}" alt="头像" class="nav-avatar">
+                        {% else %}
+                            <div class="nav-avatar"></div>
+                        {% endif %}
+                        <span class="username">{{ session.username }}</span>
+                        <a href="{{ url_for('logout') }}" class="nav-link">
+                            <span>🚪</span> 退出
+                        </a>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="nav-link">
+                        <span>🔑</span> 登录
+                    </a>
+                    <a href="{{ url_for('register') }}" class="nav-link">
+                        <span>📋</span> 注册
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- 闪存消息 -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        <span>{{ message }}</span>
+                        <button class="flash-close">&times;</button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- 主内容 -->
+    <main class="main-content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 孙浩然的博客. 基于 Flask 构建 | ✨ 带有酷炫鼠标效果</p>
+            <div class="footer-links">
+                <a href="#" title="GitHub">📘</a>
+                <a href="#" title="微博">📱</a>
+                <a href="#" title="邮箱">📧</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript 文件 -->
+    <script src="{{ url_for('static', filename='js/mouse-effects.js') }}"></script>
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

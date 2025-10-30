@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>鼠标效果演示</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div style="padding: 50px; text-align: center;">
+        <h1>鼠标效果演示</h1>
+        <p>移动鼠标查看拖尾效果</p>
+        <p>点击页面查看点击效果</p>
+        <button onclick="toggleRain()">切换下雨效果</button>
+    </div>
+    
+    <script src="static/js/mouse-effects.js"></script>
+    <script>
+        let rain = null;
+        initMouseEffects();
+        
+        function toggleRain() {
+            if (!rain) {
+                rain = new RainEffect();
+                rain.start();
+            } else {
+                rain.stop();
+                rain = null;
+            }
+        }
+    </script>
+</body>
+</html>

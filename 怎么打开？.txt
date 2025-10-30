@@ -1,0 +1,2 @@
+cd C:\1 phthon\learn\blog
+python app.py
